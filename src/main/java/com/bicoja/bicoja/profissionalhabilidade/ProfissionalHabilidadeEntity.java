@@ -1,56 +1,28 @@
 package com.bicoja.bicoja.profissionalhabilidade;
 
-import com.bicoja.bicoja.habilidade.HabilidadeEntity;
-import com.bicoja.bicoja.profissional.ProfissionalEntity;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "PROFISSIONAL_HABILIDADE")
+@Table(name = "tb_profissional_habilidade")
+@IdClass(ProfissionalHabilidadeId.class)
 public class ProfissionalHabilidadeEntity {
 
-    @EmbeddedId
-    private ProfissionalHabilidadeId id;
+    @Id
+    private Long profissionalId;
 
-    @ManyToOne
-    @MapsId("id_profissional")
-    @JoinColumn(name = "id_profissional")
-    private ProfissionalEntity profissional;
+    @Id
+    private Long habilidadeId;
 
-    @ManyToOne
-    @MapsId("id_habilidade")
-    @JoinColumn(name = "id_habilidade")
-    private HabilidadeEntity habilidade;
+    public ProfissionalHabilidadeEntity() {}
 
-    public ProfissionalHabilidadeEntity() {
+    public ProfissionalHabilidadeEntity(Long profissionalId, Long habilidadeId) {
+        this.profissionalId = profissionalId;
+        this.habilidadeId = habilidadeId;
     }
 
-    public ProfissionalHabilidadeId getId() {
-        return id;
-    }
-
-    public void setId(ProfissionalHabilidadeId id) {
-        this.id = id;
-    }
-
-    public ProfissionalEntity getProfissional() {
-        return profissional;
-    }
-
-    public void setProfissional(ProfissionalEntity profissional) {
-        this.profissional = profissional;
-    }
-
-    public HabilidadeEntity getHabilidade() {
-        return habilidade;
-    }
-
-    public void setHabilidade(HabilidadeEntity habilidade) {
-        this.habilidade = habilidade;
-    }
-
+    // Getters e Setters
+    public Long getProfissionalId() { return profissionalId; }
+    public void setProfissionalId(Long profissionalId) { this.profissionalId = profissionalId; }
+    public Long getHabilidadeId() { return habilidadeId; }
+    public void setHabilidadeId(Long habilidadeId) { this.habilidadeId = habilidadeId; }
 }

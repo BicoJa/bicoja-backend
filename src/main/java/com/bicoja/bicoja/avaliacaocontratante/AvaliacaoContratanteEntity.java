@@ -1,69 +1,49 @@
 package com.bicoja.bicoja.avaliacaocontratante;
 
-import com.bicoja.bicoja.contratacao.ContratacaoEntity;
-import com.bicoja.bicoja.contratante.ContratanteEntity;
-import com.bicoja.bicoja.usuario.UsuarioEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "AVALIACAO_CONTRATANTE")
+@Table(name = "tb_avaliacao_contratante")
 public class AvaliacaoContratanteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_contratacao", nullable = false)
-    private ContratacaoEntity contratacao;
+    @Column(nullable = false)
+    private Long contratacaoId; // ID da contratação vinculada
 
-    @ManyToOne
-    @JoinColumn(name = "id_avaliador", nullable = false)
-    private UsuarioEntity avaliador;
+    @Column(nullable = false)
+    private Long avaliadorId; // ID do profissional que avaliou
 
-    @ManyToOne
-    @JoinColumn(name = "id_contratante", nullable = false)
-    private ContratanteEntity contratante;
+    @Column(nullable = false)
+    private Long contratanteId; // ID do contratante avaliado
 
-    public AvaliacaoContratanteEntity() {
-    }
+    @Column(nullable = false)
+    private Integer nota; // Ex: de 1 a 5
 
-    public Integer getId() {
-        return id;
-    }
+    @Column(length = 500)
+    private String comentario;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @Column(nullable = false)
+    private LocalDateTime dataAvaliacao = LocalDateTime.now();
 
-    public ContratacaoEntity getContratacao() {
-        return contratacao;
-    }
+    public AvaliacaoContratanteEntity() {}
 
-    public void setContratacao(ContratacaoEntity contratacao) {
-        this.contratacao = contratacao;
-    }
-
-    public UsuarioEntity getAvaliador() {
-        return avaliador;
-    }
-
-    public void setAvaliador(UsuarioEntity avaliador) {
-        this.avaliador = avaliador;
-    }
-
-    public ContratanteEntity getContratante() {
-        return contratante;
-    }
-
-    public void setContratante(ContratanteEntity contratante) {
-        this.contratante = contratante;
-    }
-
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Long getContratacaoId() { return contratacaoId; }
+    public void setContratacaoId(Long contratacaoId) { this.contratacaoId = contratacaoId; }
+    public Long getAvaliadorId() { return avaliadorId; }
+    public void setAvaliadorId(Long avaliadorId) { this.avaliadorId = avaliadorId; }
+    public Long getContratanteId() { return contratanteId; }
+    public void setContratanteId(Long contratanteId) { this.contratanteId = contratanteId; }
+    public Integer getNota() { return nota; }
+    public void setNota(Integer nota) { this.nota = nota; }
+    public String getComentario() { return comentario; }
+    public void setComentario(String comentario) { this.comentario = comentario; }
+    public LocalDateTime getDataAvaliacao() { return dataAvaliacao; }
+    public void setDataAvaliacao(LocalDateTime dataAvaliacao) { this.dataAvaliacao = dataAvaliacao; }
 }

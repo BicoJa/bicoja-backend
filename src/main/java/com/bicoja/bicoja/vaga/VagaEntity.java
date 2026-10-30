@@ -1,56 +1,52 @@
 package com.bicoja.bicoja.vaga;
 
-import com.bicoja.bicoja.contratante.ContratanteEntity;
-import com.bicoja.bicoja.habilidade.HabilidadeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
-@Table(name = "VAGA")
+@Table(name = "tb_vagas")
 public class VagaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_contratante", nullable = false)
-    private ContratanteEntity contratante;
+    @Column(nullable = false)
+    private String titulo;
 
-    @ManyToOne
-    @JoinColumn(name = "id_habilidade", nullable = false)
-    private HabilidadeEntity habilidade;
+    @Column(nullable = false, length = 1000)
+    private String descricao;
 
-    public VagaEntity() {
-    }
+    @Column(nullable = false)
+    private BigDecimal orcamento;
 
-    public Integer getId() {
-        return id;
-    }
+    @Column(nullable = false)
+    private String status = "ABERTA"; // ABERTA, EM_ANDAMENTO, CONCLUIDA, CANCELADA
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @Column(nullable = false)
+    private Long contratanteId; // ID do contratante que publicou a vaga
 
-    public ContratanteEntity getContratante() {
-        return contratante;
-    }
+    @ElementCollection
+    @CollectionTable(name = "tb_vaga_habilidades", joinColumns = @JoinColumn(name = "vaga_id"))
+    @Column(name = "habilidade")
+    private List<String> habilidadesRequeridas;
 
-    public void setContratante(ContratanteEntity contratante) {
-        this.contratante = contratante;
-    }
+    public VagaEntity() {}
 
-    public HabilidadeEntity getHabilidade() {
-        return habilidade;
-    }
-
-    public void setHabilidade(HabilidadeEntity habilidade) {
-        this.habilidade = habilidade;
-    }
-
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public BigDecimal getOrcamento() { return orcamento; }
+    public void setOrcamento(BigDecimal orcamento) { this.orcamento = orcamento; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public Long getContratanteId() { return contratanteId; }
+    public void setContratanteId(Long contratanteId) { this.contratanteId = contratanteId; }
+    public List<String> getHabilidadesRequeridas() { return habilidadesRequeridas; }
+    public void setHabilidadesRequeridas(List<String> habilidadesRequeridas) { this.habilidadesRequeridas = habilidadesRequeridas; }
 }

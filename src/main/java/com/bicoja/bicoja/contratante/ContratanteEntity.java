@@ -1,42 +1,38 @@
 package com.bicoja.bicoja.contratante;
 
-import com.bicoja.bicoja.usuario.UsuarioEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "CONTRATANTE")
+@Table(name = "tb_contratantes")
 public class ContratanteEntity {
 
     @Id
-    private Integer id_usuario;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id_usuario")
-    private UsuarioEntity usuario;
+    @Column(nullable = false)
+    private String nome;
 
-    public ContratanteEntity() {
-    }
+    @Column(nullable = false, unique = true)
+    private String cpfCnpj;
 
-    public Integer getId_usuario() {
-        return id_usuario;
-    }
+    @Column(nullable = false)
+    private String telefone;
 
-    public void setId_usuario(Integer id_usuario) {
-        this.id_usuario = id_usuario;
-    }
+    @Column(nullable = false)
+    private String email;
 
-    public UsuarioEntity getUsuario() {
-        return usuario;
-    }
+    public ContratanteEntity() {}
 
-    public void setUsuario(UsuarioEntity usuario) {
-        this.usuario = usuario;
-    }
-
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+    public String getCpfCnpj() { return cpfCnpj; }
+    public void setCpfCnpj(String cpfCnpj) { this.cpfCnpj = cpfCnpj; }
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 }

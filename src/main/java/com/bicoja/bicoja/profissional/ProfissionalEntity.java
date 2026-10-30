@@ -1,42 +1,46 @@
 package com.bicoja.bicoja.profissional;
 
-import com.bicoja.bicoja.usuario.UsuarioEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "PROFISSIONAL")
+@Table(name = "tb_profissionais")
 public class ProfissionalEntity {
 
     @Id
-    private Integer id_usuario;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id_usuario")
-    private UsuarioEntity usuario;
+    @Column(nullable = false)
+    private String nome;
 
-    public ProfissionalEntity() {
-    }
+    @Column(nullable = false, unique = true)
+    private String cpf;
 
-    public Integer getId_usuario() {
-        return id_usuario;
-    }
+    @Column(nullable = false)
+    private String telefone;
 
-    public void setId_usuario(Integer id_usuario) {
-        this.id_usuario = id_usuario;
-    }
+    @Column(nullable = false)
+    private String email;
 
-    public UsuarioEntity getUsuario() {
-        return usuario;
-    }
+    @ElementCollection
+    @CollectionTable(name = "tb_profissional_habilidades", joinColumns = @JoinColumn(name = "profissional_id"))
+    @Column(name = "habilidade")
+    private List<String> habilidades;
 
-    public void setUsuario(UsuarioEntity usuario) {
-        this.usuario = usuario;
-    }
+    public ProfissionalEntity() {}
 
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+    public String getCpf() { return cpf; }
+    public void setCpf(String cpf) { this.cpf = cpf; }
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public List<String> getHabilidades() { return habilidades; }
+    public void setHabilidades(List<String> habilidades) { this.habilidades = habilidades; }
 }

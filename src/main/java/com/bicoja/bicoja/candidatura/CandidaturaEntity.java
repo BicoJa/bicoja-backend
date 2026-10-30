@@ -1,56 +1,50 @@
 package com.bicoja.bicoja.candidatura;
 
-import com.bicoja.bicoja.profissional.ProfissionalEntity;
-import com.bicoja.bicoja.vaga.VagaEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "CANDIDATURA")
+@Table(name = "tb_candidaturas")
 public class CandidaturaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_vaga", nullable = false)
-    private VagaEntity vaga;
+    @Column(nullable = false)
+    private Long vagaId;
 
-    @ManyToOne
-    @JoinColumn(name = "id_profissional", nullable = false)
-    private ProfissionalEntity profissional;
+    @Column(nullable = false)
+    private Long profissionalId;
 
-    public CandidaturaEntity() {
-    }
+    @Column(nullable = false)
+    private BigDecimal valorProposta;
 
-    public Integer getId() {
-        return id;
-    }
+    @Column(length = 500)
+    private String mensagem;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @Column(nullable = false)
+    private String status = "PENDENTE"; // PENDENTE, ACEITA, RECUSADA
 
-    public VagaEntity getVaga() {
-        return vaga;
-    }
+    @Column(nullable = false)
+    private LocalDateTime dataCandidatura = LocalDateTime.now();
 
-    public void setVaga(VagaEntity vaga) {
-        this.vaga = vaga;
-    }
+    public CandidaturaEntity() {}
 
-    public ProfissionalEntity getProfissional() {
-        return profissional;
-    }
-
-    public void setProfissional(ProfissionalEntity profissional) {
-        this.profissional = profissional;
-    }
-
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Long getVagaId() { return vagaId; }
+    public void setVagaId(Long vagaId) { this.vagaId = vagaId; }
+    public Long getProfissionalId() { return profissionalId; }
+    public void setProfissionalId(Long profissionalId) { this.profissionalId = profissionalId; }
+    public BigDecimal getValorProposta() { return valorProposta; }
+    public void setValorProposta(BigDecimal valorProposta) { this.valorProposta = valorProposta; }
+    public String getMensagem() { return mensagem; }
+    public void setMensagem(String mensagem) { this.mensagem = mensagem; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public LocalDateTime getDataCandidatura() { return dataCandidatura; }
+    public void setDataCandidatura(LocalDateTime dataCandidatura) { this.dataCandidatura = dataCandidatura; }
 }
