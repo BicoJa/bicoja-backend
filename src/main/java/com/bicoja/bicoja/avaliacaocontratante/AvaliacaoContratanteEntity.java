@@ -1,69 +1,54 @@
-package com.bicoja.bicoja.avaliacaocontratante;
+package com.bicoja.bicoja.usuario;
 
-import com.bicoja.bicoja.contratacao.ContratacaoEntity;
-import com.bicoja.bicoja.contratante.ContratanteEntity;
-import com.bicoja.bicoja.usuario.UsuarioEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "AVALIACAO_CONTRATANTE")
-public class AvaliacaoContratanteEntity {
+@Table(name = "tb_usuarios")
+public class UsuarioEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_contratacao", nullable = false)
-    private ContratacaoEntity contratacao;
+    @Column(nullable = false)
+    private String nomeCompleto;
 
-    @ManyToOne
-    @JoinColumn(name = "id_avaliador", nullable = false)
-    private UsuarioEntity avaliador;
+    @Column(nullable = false, unique = true)
+    private String telefone;
 
-    @ManyToOne
-    @JoinColumn(name = "id_contratante", nullable = false)
-    private ContratanteEntity contratante;
+    @Column(nullable = false)
+    private String tipoUsuario; // "PROFISSIONAL" ou "CONTRATANTE"
 
-    public AvaliacaoContratanteEntity() {
+    @ElementCollection
+    @CollectionTable(name = "tb_usuario_servicos", joinColumns = @JoinColumn(name = "usuario_id"))
+    @Column(name = "servico")
+    private List<String> servicos;
+
+    @Column(nullable = false)
+    private boolean telefoneVerificado = false;
+
+    public UsuarioEntity() {}
+
+    public UsuarioEntity(String nomeCompleto, String telefone, String tipoUsuario, List<String> servicos) {
+        this.nomeCompleto = nomeCompleto;
+        this.telefone = telefone;
+        this.tipoUsuario = tipoUsuario;
+        this.servicos = servicos;
+        this.telefoneVerificado = false;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public ContratacaoEntity getContratacao() {
-        return contratacao;
-    }
-
-    public void setContratacao(ContratacaoEntity contratacao) {
-        this.contratacao = contratacao;
-    }
-
-    public UsuarioEntity getAvaliador() {
-        return avaliador;
-    }
-
-    public void setAvaliador(UsuarioEntity avaliador) {
-        this.avaliador = avaliador;
-    }
-
-    public ContratanteEntity getContratante() {
-        return contratante;
-    }
-
-    public void setContratante(ContratanteEntity contratante) {
-        this.contratante = contratante;
-    }
-
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getNomeCompleto() { return nomeCompleto; }
+    public void setNomeCompleto(String nomeCompleto) { this.nomeCompleto = nomeCompleto; }
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
+    public String getTipoUsuario() { return tipoUsuario; }
+    public void setTipoUsuario(String tipoUsuario) { this.tipoUsuario = tipoUsuario; }
+    public List<String> getServicos() { return servicos; }
+    public void setServicos(List<String> servicos) { this.servicos = servicos; }
+    public boolean isTelefoneVerificado() { return telefoneVerificado; }
+    public void setTelefoneVerificado(boolean telefoneVerificado) { this.telefoneVerificado = telefoneVerificado; }
 }

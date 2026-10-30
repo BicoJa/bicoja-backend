@@ -1,42 +1,48 @@
 package com.bicoja.bicoja.contratante;
 
 import com.bicoja.bicoja.usuario.UsuarioEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "CONTRATANTE")
+@Table(name = "tb_contratantes")
 public class ContratanteEntity {
 
     @Id
-    private Integer id_usuario;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private UsuarioEntity usuario;
 
-    public ContratanteEntity() {
-    }
+    private String empresaOuRazaoSocial;
 
-    public Integer getId_usuario() {
-        return id_usuario;
-    }
+    private String cpfOuCnpj;
 
-    public void setId_usuario(Integer id_usuario) {
-        this.id_usuario = id_usuario;
-    }
+    private String endereco;
 
-    public UsuarioEntity getUsuario() {
-        return usuario;
-    }
+    public ContratanteEntity() {}
 
-    public void setUsuario(UsuarioEntity usuario) {
+    public ContratanteEntity(UsuarioEntity usuario, String empresaOuRazaoSocial, String cpfOuCnpj, String endereco) {
         this.usuario = usuario;
+        this.empresaOuRazaoSocial = empresaOuRazaoSocial;
+        this.cpfOuCnpj = cpfOuCnpj;
+        this.endereco = endereco;
     }
 
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public UsuarioEntity getUsuario() { return usuario; }
+    public void setUsuario(UsuarioEntity usuario) { this.usuario = usuario; }
+
+    public String getEmpresaOuRazaoSocial() { return empresaOuRazaoSocial; }
+    public void setEmpresaOuRazaoSocial(String empresaOuRazaoSocial) { this.empresaOuRazaoSocial = empresaOuRazaoSocial; }
+
+    public String getCpfOuCnpj() { return cpfOuCnpj; }
+    public void setCpfOuCnpj(String cpfOuCnpj) { this.cpfOuCnpj = cpfOuCnpj; }
+
+    public String getEndereco() { return endereco; }
+    public void setEndereco(String endereco) { this.endereco = endereco; }
 }

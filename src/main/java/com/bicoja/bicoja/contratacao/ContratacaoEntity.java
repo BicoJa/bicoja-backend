@@ -1,56 +1,77 @@
 package com.bicoja.bicoja.contratacao;
 
-import com.bicoja.bicoja.profissional.ProfissionalEntity;
-import com.bicoja.bicoja.vaga.VagaEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "CONTRATACAO")
+@Table(name = "tb_contratacoes")
 public class ContratacaoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_vaga", nullable = false)
-    private VagaEntity vaga;
+    @Column(nullable = false)
+    private Long vagaId;
 
-    @ManyToOne
-    @JoinColumn(name = "id_profissional", nullable = false)
-    private ProfissionalEntity profissional;
+    @Column(nullable = false)
+    private Long contratanteId;
 
-    public ContratacaoEntity() {
+    @Column(nullable = false)
+    private Long profissionalId;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal valorAcordado;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private StatusContratacao status = StatusContratacao.EM_ANDAMENTO;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataInicio = LocalDateTime.now();
+
+    private LocalDateTime dataConclusao;
+
+    public enum StatusContratacao {
+        EM_ANDAMENTO,
+        CONCLUIDA,
+        CANCELADA
     }
 
-    public Integer getId() {
-        return id;
+    public ContratacaoEntity() {}
+
+    public ContratacaoEntity(Long vagaId, Long contratanteId, Long profissionalId, BigDecimal valorAcordado) {
+        this.vagaId = vagaId;
+        this.contratanteId = contratanteId;
+        this.profissionalId = profissionalId;
+        this.valorAcordado = valorAcordado;
+        this.status = StatusContratacao.EM_ANDAMENTO;
+        this.dataInicio = LocalDateTime.now();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public VagaEntity getVaga() {
-        return vaga;
-    }
+    public Long getVagaId() { return vagaId; }
+    public void setVagaId(Long vagaId) { this.vagaId = vagaId; }
 
-    public void setVaga(VagaEntity vaga) {
-        this.vaga = vaga;
-    }
+    public Long getContratanteId() { return contratanteId; }
+    public void setContratanteId(Long contratanteId) { this.contratanteId = contratanteId; }
 
-    public ProfissionalEntity getProfissional() {
-        return profissional;
-    }
+    public Long getProfissionalId() { return profissionalId; }
+    public void setProfissionalId(Long profissionalId) { this.profissionalId = profissionalId; }
 
-    public void setProfissional(ProfissionalEntity profissional) {
-        this.profissional = profissional;
-    }
+    public BigDecimal getValorAcordado() { return valorAcordado; }
+    public void setValorAcordado(BigDecimal valorAcordado) { this.valorAcordado = valorAcordado; }
 
+    public StatusContratacao getStatus() { return status; }
+    public void setStatus(StatusContratacao status) { this.status = status; }
+
+    public LocalDateTime getDataInicio() { return dataInicio; }
+    public void setDataInicio(LocalDateTime dataInicio) { this.dataInicio = dataInicio; }
+
+    public LocalDateTime getDataConclusao() { return dataConclusao; }
+    public void setDataConclusao(LocalDateTime dataConclusao) { this.dataConclusao = dataConclusao; }
 }

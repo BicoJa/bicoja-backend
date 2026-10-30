@@ -1,56 +1,94 @@
 package com.bicoja.bicoja.vaga;
 
-import com.bicoja.bicoja.contratante.ContratanteEntity;
-import com.bicoja.bicoja.habilidade.HabilidadeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "VAGA")
+@Table(name = "tb_vagas")
 public class VagaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_contratante", nullable = false)
-    private ContratanteEntity contratante;
+    @Column(nullable = false)
+    private Long contratanteId;
 
-    @ManyToOne
-    @JoinColumn(name = "id_habilidade", nullable = false)
-    private HabilidadeEntity habilidade;
+    @Column(nullable = false, length = 150)
+    private String titulo;
 
-    public VagaEntity() {
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String descricao;
+
+    @Column(nullable = false, length = 100)
+    private String categoria; // Ex: Eletricista, Encanador, Pedreiro, etc.
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal valorOferecido;
+
+    @Column(nullable = false)
+    private String cidade;
+
+    @Column(nullable = false)
+    private String estado;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private StatusVaga status = StatusVaga.ABERTA;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataCriacao = LocalDateTime.now();
+
+    public enum StatusVaga {
+        ABERTA,
+        EM_ANDAMENTO,
+        CONCLUIDA,
+        CANCELADA
     }
 
-    public Integer getId() {
-        return id;
+    public VagaEntity() {}
+
+    public VagaEntity(Long contratanteId, String titulo, String descricao, String categoria, BigDecimal valorOferecido, String cidade, String estado) {
+        this.contratanteId = contratanteId;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.categoria = categoria;
+        this.valorOferecido = valorOferecido;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.status = StatusVaga.ABERTA;
+        this.dataCriacao = LocalDateTime.now();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public ContratanteEntity getContratante() {
-        return contratante;
-    }
+    public Long getContratanteId() { return contratanteId; }
+    public void setContratanteId(Long contratanteId) { this.contratanteId = contratanteId; }
 
-    public void setContratante(ContratanteEntity contratante) {
-        this.contratante = contratante;
-    }
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
 
-    public HabilidadeEntity getHabilidade() {
-        return habilidade;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public void setHabilidade(HabilidadeEntity habilidade) {
-        this.habilidade = habilidade;
-    }
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
 
+    public BigDecimal getValorOferecido() { return valorOferecido; }
+    public void setValorOferecido(BigDecimal valorOferecido) { this.valorOferecido = valorOferecido; }
+
+    public String getCidade() { return cidade; }
+    public void setCidade(String cidade) { this.cidade = cidade; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+
+    public StatusVaga getStatus() { return status; }
+    public void setStatus(StatusVaga status) { this.status = status; }
+
+    public LocalDateTime getDataCriacao() { return dataCriacao; }
+    public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
 }

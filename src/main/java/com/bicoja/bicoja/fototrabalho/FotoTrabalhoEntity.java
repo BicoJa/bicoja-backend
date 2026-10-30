@@ -1,43 +1,49 @@
 package com.bicoja.bicoja.fototrabalho;
 
-import com.bicoja.bicoja.profissional.ProfissionalEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "FOTO_TRABALHO")
+@Table(name = "tb_fotos_trabalho")
 public class FotoTrabalhoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_profissional", nullable = false)
-    private ProfissionalEntity profissional;
+    @Column(nullable = false)
+    private Long profissionalId;
 
-    public FotoTrabalhoEntity() {
+    @Column(nullable = false)
+    private String urlFoto;
+
+    private String descricao;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataEnvio = LocalDateTime.now();
+
+    public FotoTrabalhoEntity() {}
+
+    public FotoTrabalhoEntity(Long profissionalId, String urlFoto, String descricao) {
+        this.profissionalId = profissionalId;
+        this.urlFoto = urlFoto;
+        this.descricao = descricao;
+        this.dataEnvio = LocalDateTime.now();
     }
 
-    public Integer getId() {
-        return id;
-    }
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public Long getProfissionalId() { return profissionalId; }
+    public void setProfissionalId(Long profissionalId) { this.profissionalId = profissionalId; }
 
-    public ProfissionalEntity getProfissional() {
-        return profissional;
-    }
+    public String getUrlFoto() { return urlFoto; }
+    public void setUrlFoto(String urlFoto) { this.urlFoto = urlFoto; }
 
-    public void setProfissional(ProfissionalEntity profissional) {
-        this.profissional = profissional;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
+    public LocalDateTime getDataEnvio() { return dataEnvio; }
+    public void setDataEnvio(LocalDateTime dataEnvio) { this.dataEnvio = dataEnvio; }
 }

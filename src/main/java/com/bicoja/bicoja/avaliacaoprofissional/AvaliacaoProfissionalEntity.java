@@ -1,69 +1,52 @@
 package com.bicoja.bicoja.avaliacaoprofissional;
 
-import com.bicoja.bicoja.contratacao.ContratacaoEntity;
-import com.bicoja.bicoja.profissional.ProfissionalEntity;
-import com.bicoja.bicoja.usuario.UsuarioEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "AVALIACAO_PROFISSIONAL")
+@Table(name = "tb_avaliacoes_profissional")
 public class AvaliacaoProfissionalEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_contratacao", nullable = false)
-    private ContratacaoEntity contratacao;
+    @Column(nullable = false)
+    private Long profissionalId;
 
-    @ManyToOne
-    @JoinColumn(name = "id_avaliador", nullable = false)
-    private UsuarioEntity avaliador;
+    @Column(nullable = false)
+    private Long contratanteId;
 
-    @ManyToOne
-    @JoinColumn(name = "id_profissional", nullable = false)
-    private ProfissionalEntity profissional;
+    @Column(nullable = false)
+    private Integer nota; // Ex: de 1 a 5
 
-    public AvaliacaoProfissionalEntity() {
+    @Column(columnDefinition = "TEXT")
+    private String comentario;
+
+    @Column(nullable = false)
+    private LocalDateTime dataCriacao = LocalDateTime.now();
+
+    public AvaliacaoProfissionalEntity() {}
+
+    public AvaliacaoProfissionalEntity(Long profissionalId, Long contratanteId, Integer nota, String comentario) {
+        this.profissionalId = profissionalId;
+        this.contratanteId = contratanteId;
+        this.nota = nota;
+        this.comentario = comentario;
+        this.dataCriacao = LocalDateTime.now();
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public ContratacaoEntity getContratacao() {
-        return contratacao;
-    }
-
-    public void setContratacao(ContratacaoEntity contratacao) {
-        this.contratacao = contratacao;
-    }
-
-    public UsuarioEntity getAvaliador() {
-        return avaliador;
-    }
-
-    public void setAvaliador(UsuarioEntity avaliador) {
-        this.avaliador = avaliador;
-    }
-
-    public ProfissionalEntity getProfissional() {
-        return profissional;
-    }
-
-    public void setProfissional(ProfissionalEntity profissional) {
-        this.profissional = profissional;
-    }
-
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Long getProfissionalId() { return profissionalId; }
+    public void setProfissionalId(Long profissionalId) { this.profissionalId = profissionalId; }
+    public Long getContratanteId() { return contratanteId; }
+    public void setContratanteId(Long contratanteId) { this.contratanteId = contratanteId; }
+    public Integer getNota() { return nota; }
+    public void setNota(Integer nota) { this.nota = nota; }
+    public String getComentario() { return comentario; }
+    public void setComentario(String comentario) { this.comentario = comentario; }
+    public LocalDateTime getDataCriacao() { return dataCriacao; }
+    public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
 }

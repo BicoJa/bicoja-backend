@@ -1,43 +1,57 @@
 package com.bicoja.bicoja.notificacao;
 
-import com.bicoja.bicoja.usuario.UsuarioEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "NOTIFICACAO")
+@Table(name = "tb_notificacoes")
 public class NotificacaoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private UsuarioEntity usuario;
+    @Column(nullable = false)
+    private Long usuarioId;
 
-    public NotificacaoEntity() {
+    @Column(nullable = false, length = 150)
+    private String titulo;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String mensagem;
+
+    @Column(nullable = false)
+    private boolean lida = false;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataCriacao = LocalDateTime.now();
+
+    public NotificacaoEntity() {}
+
+    public NotificacaoEntity(Long usuarioId, String titulo, String mensagem) {
+        this.usuarioId = usuarioId;
+        this.titulo = titulo;
+        this.mensagem = mensagem;
+        this.lida = false;
+        this.dataCriacao = LocalDateTime.now();
     }
 
-    public Integer getId() {
-        return id;
-    }
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public Long getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
 
-    public UsuarioEntity getUsuario() {
-        return usuario;
-    }
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
 
-    public void setUsuario(UsuarioEntity usuario) {
-        this.usuario = usuario;
-    }
+    public String getMensagem() { return mensagem; }
+    public void setMensagem(String mensagem) { this.mensagem = mensagem; }
 
+    public boolean isLida() { return lida; }
+    public void setLida(boolean lida) { this.lida = lida; }
+
+    public LocalDateTime getDataCriacao() { return dataCriacao; }
+    public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
 }

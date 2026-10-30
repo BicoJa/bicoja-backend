@@ -1,56 +1,58 @@
 package com.bicoja.bicoja.candidatura;
 
-import com.bicoja.bicoja.profissional.ProfissionalEntity;
-import com.bicoja.bicoja.vaga.VagaEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "CANDIDATURA")
+@Table(name = "tb_candidaturas")
 public class CandidaturaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_vaga", nullable = false)
-    private VagaEntity vaga;
+    @Column(nullable = false)
+    private Long vagaId;
 
-    @ManyToOne
-    @JoinColumn(name = "id_profissional", nullable = false)
-    private ProfissionalEntity profissional;
+    @Column(nullable = false)
+    private Long profissionalId;
 
-    public CandidaturaEntity() {
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private StatusCandidatura status = StatusCandidatura.PENDENTE;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataCandidatura = LocalDateTime.now();
+
+    public enum StatusCandidatura {
+        PENDENTE,
+        ACEITA,
+        RECUSADA,
+        CANCELADA
     }
 
-    public Integer getId() {
-        return id;
+    public CandidaturaEntity() {}
+
+    public CandidaturaEntity(Long vagaId, Long profissionalId) {
+        this.vagaId = vagaId;
+        this.profissionalId = profissionalId;
+        this.status = StatusCandidatura.PENDENTE;
+        this.dataCandidatura = LocalDateTime.now();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public VagaEntity getVaga() {
-        return vaga;
-    }
+    public Long getVagaId() { return vagaId; }
+    public void setVagaId(Long vagaId) { this.vagaId = vagaId; }
 
-    public void setVaga(VagaEntity vaga) {
-        this.vaga = vaga;
-    }
+    public Long getProfissionalId() { return profissionalId; }
+    public void setProfissionalId(Long profissionalId) { this.profissionalId = profissionalId; }
 
-    public ProfissionalEntity getProfissional() {
-        return profissional;
-    }
+    public StatusCandidatura getStatus() { return status; }
+    public void setStatus(StatusCandidatura status) { this.status = status; }
 
-    public void setProfissional(ProfissionalEntity profissional) {
-        this.profissional = profissional;
-    }
-
+    public LocalDateTime getDataCandidatura() { return dataCandidatura; }
+    public void setDataCandidatura(LocalDateTime dataCandidatura) { this.dataCandidatura = dataCandidatura; }
 }

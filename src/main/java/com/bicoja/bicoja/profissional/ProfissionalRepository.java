@@ -1,6 +1,17 @@
 package com.bicoja.bicoja.profissional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ProfissionalRepository extends JpaRepository<ProfissionalEntity, Integer> {
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface ProfissionalRepository extends JpaRepository<ProfissionalEntity, Long> {
+
+    Optional<ProfissionalEntity> findByUsuarioId(Long usuarioId);
+
+    boolean existsByUsuarioId(Long usuarioId);
+
+    List<ProfissionalEntity> findByCidadeIgnoreCaseAndEstadoIgnoreCase(String cidade, String estado);
 }
