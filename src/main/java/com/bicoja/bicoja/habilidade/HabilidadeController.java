@@ -1,42 +1,35 @@
 package com.bicoja.bicoja.habilidade;
 
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/habilidades")
+@RequestMapping("/api/habilidade")
+@CrossOrigin(origins = "*")
 public class HabilidadeController {
+    private final HabilidadeService service;
 
-    private final HabilidadeService habilidadeService;
-
-    public HabilidadeController(HabilidadeService habilidadeService) {
-        this.habilidadeService = habilidadeService;
-    }
-
-    @PostMapping
-    public ResponseEntity<HabilidadeEntity> criarHabilidade(@Valid @RequestBody HabilidadeEntity habilidade) {
-        HabilidadeEntity novaHabilidade = habilidadeService.criarHabilidade(habilidade);
-        return ResponseEntity.ok(novaHabilidade);
-    }
+    public HabilidadeController(HabilidadeService service) { this.service = service; }
 
     @GetMapping
-    public ResponseEntity<List<HabilidadeEntity>> listarTodas() {
-        List<HabilidadeEntity> habilidades = habilidadeService.listarTodas();
-        return ResponseEntity.ok(habilidades);
-    }
+    public List<Habilidade> listar() { return service.listar(); }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HabilidadeEntity> buscarPorId(@PathVariable Long id) {
-        HabilidadeEntity habilidade = habilidadeService.buscarPorId(id);
-        return ResponseEntity.ok(habilidade);
+    public Habilidade buscar(@PathVariable Long id) { return service.buscar(id); }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Habilidade criar(@Valid @RequestBody Habilidade entidade) { return service.salvar(entidade); }
+
+    @PutMapping("/{id}")
+    public Habilidade atualizar(@PathVariable Long id, @Valid @RequestBody Habilidade entidade) {
+        entidade.setId(id);
+        return service.atualizar(id, entidade);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarHabilidade(@PathVariable Long id) {
-        habilidadeService.deletarHabilidade(id);
-        return ResponseEntity.noContent().build();
-    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) { service.excluir(id); }
 }

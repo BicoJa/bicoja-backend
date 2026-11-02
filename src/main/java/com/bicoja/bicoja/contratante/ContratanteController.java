@@ -1,42 +1,35 @@
 package com.bicoja.bicoja.contratante;
 
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/contratantes")
+@RequestMapping("/api/contratante")
+@CrossOrigin(origins = "*")
 public class ContratanteController {
+    private final ContratanteService service;
 
-    private final ContratanteService contratanteService;
-
-    public ContratanteController(ContratanteService contratanteService) {
-        this.contratanteService = contratanteService;
-    }
-
-    @PostMapping
-    public ResponseEntity<ContratanteEntity> criar(@Valid @RequestBody ContratanteEntity contratante) {
-        ContratanteEntity novoContratante = contratanteService.salvar(contratante);
-        return ResponseEntity.ok(novoContratante);
-    }
+    public ContratanteController(ContratanteService service) { this.service = service; }
 
     @GetMapping
-    public ResponseEntity<List<ContratanteEntity>> listarTodos() {
-        List<ContratanteEntity> contratantes = contratanteService.listarTodos();
-        return ResponseEntity.ok(contratantes);
-    }
+    public List<Contratante> listar() { return service.listar(); }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ContratanteEntity> buscarPorId(@PathVariable Long id) {
-        ContratanteEntity contratante = contratanteService.buscarPorId(id);
-        return ResponseEntity.ok(contratante);
+    public Contratante buscar(@PathVariable Long id) { return service.buscar(id); }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Contratante criar(@Valid @RequestBody Contratante entidade) { return service.salvar(entidade); }
+
+    @PutMapping("/{id}")
+    public Contratante atualizar(@PathVariable Long id, @Valid @RequestBody Contratante entidade) {
+        entidade.setIdContratante(id);
+        return service.atualizar(id, entidade);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        contratanteService.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) { service.excluir(id); }
 }

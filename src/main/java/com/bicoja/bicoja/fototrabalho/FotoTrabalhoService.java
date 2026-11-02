@@ -1,28 +1,29 @@
 package com.bicoja.bicoja.fototrabalho;
 
+import com.bicoja.bicoja.config.RecursoNaoEncontradoException;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class FotoTrabalhoService {
+    private final FotoTrabalhoRepository repository;
 
-    private final FotoTrabalhoRepository fotoTrabalhoRepository;
-
-    public FotoTrabalhoService(FotoTrabalhoRepository fotoTrabalhoRepository) {
-        this.fotoTrabalhoRepository = fotoTrabalhoRepository;
+    public FotoTrabalhoService(FotoTrabalhoRepository repository) {
+        this.repository = repository;
     }
 
-    public FotoTrabalhoEntity salvar(FotoTrabalhoEntity foto) {
-        return fotoTrabalhoRepository.save(foto);
+    public List<FotoTrabalho> listar() { return repository.findAll(); }
+    public FotoTrabalho buscar(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("FotoTrabalho não encontrado: " + id));
     }
-
-    public List<FotoTrabalhoEntity> listarPorProfissional(Long profissionalId) {
-        return fotoTrabalhoRepository.findByProfissionalId(profissionalId);
+    public FotoTrabalho salvar(FotoTrabalho entidade) { return repository.save(entidade); }
+    public FotoTrabalho atualizar(Long id, FotoTrabalho entidade) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("FotoTrabalho não encontrado: " + id);
+        return repository.save(entidade);
     }
-
-    public void deletar(Long id) {
-        FotoTrabalhoEntity foto = fotoTrabalhoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Foto não encontrada com o ID: " + id));
-        fotoTrabalhoRepository.delete(foto);
+    public void excluir(Long id) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("FotoTrabalho não encontrado: " + id);
+        repository.deleteById(id);
     }
 }

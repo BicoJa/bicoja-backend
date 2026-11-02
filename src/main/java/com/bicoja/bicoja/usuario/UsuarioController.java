@@ -1,46 +1,35 @@
 package com.bicoja.bicoja.usuario;
 
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/api/usuario")
+@CrossOrigin(origins = "*")
 public class UsuarioController {
+    private final UsuarioService service;
 
-    private final UsuarioService usuarioService;
+    public UsuarioController(UsuarioService service) { this.service = service; }
 
-    public UsuarioController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
-    }
+    @GetMapping
+    public List<Usuario> listar() { return service.listar(); }
+
+    @GetMapping("/{id}")
+    public Usuario buscar(@PathVariable Long id) { return service.buscar(id); }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody UsuarioDTO dto) {
-        UsuarioDTO salvo = usuarioService.salvar(dto);
-        return ResponseEntity.ok(salvo);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Usuario criar(@Valid @RequestBody Usuario entidade) { return service.salvar(entidade); }
+
+    @PutMapping("/{id}")
+    public Usuario atualizar(@PathVariable Long id, @Valid @RequestBody Usuario entidade) {
+        entidade.setIdUsuario(id);
+        return service.atualizar(id, entidade);
     }
 
-    @PostMapping("/cadastro/profissional")
-    public ResponseEntity> cadastrarProfissional(@Valid @RequestBody CadastroDTO dto) {
-        usuarioService.cadastrarProfissional(dto);
-        return ResponseEntity.ok(Map.of("mensagem", "Cadastro profissional realizado com sucesso. Verifique o totem SMS."));
-    }
-
-    @PostMapping("/cadastro/contratante")
-    public ResponseEntity> cadastrarContratante(@Valid @RequestBody CadastroDTO dto) {
-        usuarioService.cadastrarContratante(dto);
-        return ResponseEntity.ok(Map.of("mensagem", "Cadastro de contratante realizado com sucesso. Verifique o totem SMS."));
-    }
-
-    @PostMapping("/verificar-token")
-    public ResponseEntity> verificarToken(@Valid @RequestBody ValidarTokenDTO dto) {
-        boolean sucesso = usuarioService.confirmarToken(dto);
-        if (sucesso) {
-            return ResponseEntity.ok(Map.of("mensagem", "Telefone verificado e conta ativada com sucesso!"));
-        } else {
-            return ResponseEntity.badRequest().body(Map.of("erro", "Código OTP inválido ou expirado."));
-        }
-    }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) { service.excluir(id); }
 }

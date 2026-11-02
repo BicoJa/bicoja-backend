@@ -1,42 +1,35 @@
 package com.bicoja.bicoja.contratacao;
 
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/contratacoes")
+@RequestMapping("/api/contratacao")
+@CrossOrigin(origins = "*")
 public class ContratacaoController {
+    private final ContratacaoService service;
 
-    private final ContratacaoService contratacaoService;
+    public ContratacaoController(ContratacaoService service) { this.service = service; }
 
-    public ContratacaoController(ContratacaoService contratacaoService) {
-        this.contratacaoService = contratacaoService;
-    }
+    @GetMapping
+    public List<Contratacao> listar() { return service.listar(); }
+
+    @GetMapping("/{id}")
+    public Contratacao buscar(@PathVariable Long id) { return service.buscar(id); }
 
     @PostMapping
-    public ResponseEntity<ContratacaoEntity> criarContratacao(@Valid @RequestBody ContratacaoEntity contratacao) {
-        ContratacaoEntity novaContratacao = contratacaoService.criarContratacao(contratacao);
-        return ResponseEntity.ok(novaContratacao);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Contratacao criar(@Valid @RequestBody Contratacao entidade) { return service.salvar(entidade); }
+
+    @PutMapping("/{id}")
+    public Contratacao atualizar(@PathVariable Long id, @Valid @RequestBody Contratacao entidade) {
+        entidade.setId(id);
+        return service.atualizar(id, entidade);
     }
 
-    @GetMapping("/profissional/{profissionalId}")
-    public ResponseEntity<List<ContratacaoEntity>> listarPorProfissional(@PathVariable Long profissionalId) {
-        List<ContratacaoEntity> lista = contratacaoService.listarPorProfissional(profissionalId);
-        return ResponseEntity.ok(lista);
-    }
-
-    @GetMapping("/contratante/{contratanteId}")
-    public ResponseEntity<List<ContratacaoEntity>> listarPorContratante(@PathVariable Long contratanteId) {
-        List<ContratacaoEntity> lista = contratacaoService.listarPorContratante(contratanteId);
-        return ResponseEntity.ok(lista);
-    }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<ContratacaoEntity> atualizarStatus(@PathVariable Long id, @RequestParam String status) {
-        ContratacaoEntity atualizada = contratacaoService.atualizarStatus(id, status);
-        return ResponseEntity.ok(atualizada);
-    }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) { service.excluir(id); }
 }

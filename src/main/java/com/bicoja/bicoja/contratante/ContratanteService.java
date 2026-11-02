@@ -1,32 +1,29 @@
 package com.bicoja.bicoja.contratante;
 
+import com.bicoja.bicoja.config.RecursoNaoEncontradoException;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class ContratanteService {
+    private final ContratanteRepository repository;
 
-    private final ContratanteRepository contratanteRepository;
-
-    public ContratanteService(ContratanteRepository contratanteRepository) {
-        this.contratanteRepository = contratanteRepository;
+    public ContratanteService(ContratanteRepository repository) {
+        this.repository = repository;
     }
 
-    public ContratanteEntity salvar(ContratanteEntity contratante) {
-        return contratanteRepository.save(contratante);
+    public List<Contratante> listar() { return repository.findAll(); }
+    public Contratante buscar(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Contratante não encontrado: " + id));
     }
-
-    public List<ContratanteEntity> listarTodos() {
-        return contratanteRepository.findAll();
+    public Contratante salvar(Contratante entidade) { return repository.save(entidade); }
+    public Contratante atualizar(Long id, Contratante entidade) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Contratante não encontrado: " + id);
+        return repository.save(entidade);
     }
-
-    public ContratanteEntity buscarPorId(Long id) {
-        return contratanteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contratante não encontrado com o ID: " + id));
-    }
-
-    public void deletar(Long id) {
-        ContratanteEntity contratante = buscarPorId(id);
-        contratanteRepository.delete(contratante);
+    public void excluir(Long id) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Contratante não encontrado: " + id);
+        repository.deleteById(id);
     }
 }

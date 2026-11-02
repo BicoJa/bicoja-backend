@@ -1,36 +1,35 @@
 package com.bicoja.bicoja.fototrabalho;
 
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/fotos-trabalho")
+@RequestMapping("/api/fototrabalho")
+@CrossOrigin(origins = "*")
 public class FotoTrabalhoController {
+    private final FotoTrabalhoService service;
 
-    private final FotoTrabalhoService fotoTrabalhoService;
+    public FotoTrabalhoController(FotoTrabalhoService service) { this.service = service; }
 
-    public FotoTrabalhoController(FotoTrabalhoService fotoTrabalhoService) {
-        this.fotoTrabalhoService = fotoTrabalhoService;
-    }
+    @GetMapping
+    public List<FotoTrabalho> listar() { return service.listar(); }
+
+    @GetMapping("/{id}")
+    public FotoTrabalho buscar(@PathVariable Long id) { return service.buscar(id); }
 
     @PostMapping
-    public ResponseEntity<FotoTrabalhoEntity> adicionarFoto(@Valid @RequestBody FotoTrabalhoEntity foto) {
-        FotoTrabalhoEntity novaFoto = fotoTrabalhoService.salvar(foto);
-        return ResponseEntity.ok(novaFoto);
-    }
+    @ResponseStatus(HttpStatus.CREATED)
+    public FotoTrabalho criar(@Valid @RequestBody FotoTrabalho entidade) { return service.salvar(entidade); }
 
-    @GetMapping("/profissional/{profissionalId}")
-    public ResponseEntity<List<FotoTrabalhoEntity>> listarPorProfissional(@PathVariable Long profissionalId) {
-        List<FotoTrabalhoEntity> fotos = fotoTrabalhoService.listarPorProfissional(profissionalId);
-        return ResponseEntity.ok(fotos);
+    @PutMapping("/{id}")
+    public FotoTrabalho atualizar(@PathVariable Long id, @Valid @RequestBody FotoTrabalho entidade) {
+        entidade.setId(id);
+        return service.atualizar(id, entidade);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarFoto(@PathVariable Long id) {
-        fotoTrabalhoService.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) { service.excluir(id); }
 }

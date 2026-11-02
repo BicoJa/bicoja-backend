@@ -1,65 +1,29 @@
 package com.bicoja.bicoja.usuario;
 
+import com.bicoja.bicoja.config.RecursoNaoEncontradoException;
+
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class UsuarioService {
+    private final UsuarioRepository repository;
 
-    private final UsuarioRepository usuarioRepository;
-
-    public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public UsuarioService(UsuarioRepository repository) {
+        this.repository = repository;
     }
 
-    public void realizarLogin(LoginDTO dto) {
-        Optional<UsuarioEntity> usuario = usuarioRepository.findByTelefone(dto.getTelefone());
-        if (usuario.isPresent()) {
-            // Lógica para enviar SMS OTP simulada
-            UsuarioEntity u = usuario.get();
-            u.setTokenOtp("1234"); // Exemplo de OTP fixo para teste
-            usuarioRepository.save(u);
-        } else {
-            throw new RuntimeException("Usuário não encontrado com este telefone.");
-        }
+    public List<Usuario> listar() { return repository.findAll(); }
+    public Usuario buscar(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Usuario não encontrado: " + id));
     }
-
-    public void cadastrarProfissional(CadastroDTO dto) {
-        if (usuarioRepository.existsByTelefone(dto.getTelefone())) {
-            throw new RuntimeException("Telefone já cadastrado.");
-        }
-        UsuarioEntity usuario = new UsuarioEntity();
-        usuario.setNomeCompleto(dto.getNomeCompleto());
-        usuario.setTelefone(dto.getTelefone());
-        usuario.setTipoUsuario("PROFISSIONAL");
-        usuario.setServicos(dto.getServicos());
-        usuario.setTokenOtp("1234");
-        usuarioRepository.save(usuario);
+    public Usuario salvar(Usuario entidade) { return repository.save(entidade); }
+    public Usuario atualizar(Long id, Usuario entidade) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Usuario não encontrado: " + id);
+        return repository.save(entidade);
     }
-
-    public void cadastrarContratante(CadastroDTO dto) {
-        if (usuarioRepository.existsByTelefone(dto.getTelefone())) {
-            throw new RuntimeException("Telefone já cadastrado.");
-        }
-        UsuarioEntity usuario = new UsuarioEntity();
-        usuario.setNomeCompleto(dto.getNomeCompleto());
-        usuario.setTelefone(dto.getTelefone());
-        usuario.setTipoUsuario("CONTRATANTE");
-        usuario.setTokenOtp("1234");
-        usuarioRepository.save(usuario);
-    }
-
-    public boolean confirmarToken(ValidarTokenDTO dto) {
-        Optional<UsuarioEntity> usuarioOpt = usuarioRepository.findByTelefone(dto.getTelefone());
-        if (usuarioOpt.isPresent()) {
-            UsuarioEntity usuario = usuarioOpt.get();
-            if ("1234".equals(dto.getToken())) { // Validação simples do token
-                usuario.setTelefoneVerificado(true);
-                usuario.setTokenOtp(null);
-                usuarioRepository.save(usuario);
-                return true;
-            }
-        }
-        return false;
+    public void excluir(Long id) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Usuario não encontrado: " + id);
+        repository.deleteById(id);
     }
 }

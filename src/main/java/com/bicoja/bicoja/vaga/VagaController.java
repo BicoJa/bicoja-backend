@@ -1,42 +1,35 @@
 package com.bicoja.bicoja.vaga;
 
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vagas")
+@RequestMapping("/api/vaga")
+@CrossOrigin(origins = "*")
 public class VagaController {
+    private final VagaService service;
 
-    private final VagaService vagaService;
-
-    public VagaController(VagaService vagaService) {
-        this.vagaService = vagaService;
-    }
-
-    @PostMapping
-    public ResponseEntity<VagaEntity> publicarVaga(@Valid @RequestBody VagaEntity vaga) {
-        VagaEntity novaVaga = vagaService.publicarVaga(vaga);
-        return ResponseEntity.ok(novaVaga);
-    }
+    public VagaController(VagaService service) { this.service = service; }
 
     @GetMapping
-    public ResponseEntity<List<VagaEntity>> listarVagasAbertas() {
-        List<VagaEntity> vagas = vagaService.listarVagasAbertas();
-        return ResponseEntity.ok(vagas);
-    }
+    public List<Vaga> listar() { return service.listar(); }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VagaEntity> buscarPorId(@PathVariable Long id) {
-        VagaEntity vaga = vagaService.buscarPorId(id);
-        return ResponseEntity.ok(vaga);
+    public Vaga buscar(@PathVariable Long id) { return service.buscar(id); }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Vaga criar(@Valid @RequestBody Vaga entidade) { return service.salvar(entidade); }
+
+    @PutMapping("/{id}")
+    public Vaga atualizar(@PathVariable Long id, @Valid @RequestBody Vaga entidade) {
+        entidade.setId(id);
+        return service.atualizar(id, entidade);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarVaga(@PathVariable Long id) {
-        vagaService.deletarVaga(id);
-        return ResponseEntity.noContent().build();
-    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) { service.excluir(id); }
 }

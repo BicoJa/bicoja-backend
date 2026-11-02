@@ -1,42 +1,35 @@
 package com.bicoja.bicoja.notificacao;
 
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/notificacoes")
+@RequestMapping("/api/notificacao")
+@CrossOrigin(origins = "*")
 public class NotificacaoController {
+    private final NotificacaoService service;
 
-    private final NotificacaoService notificacaoService;
+    public NotificacaoController(NotificacaoService service) { this.service = service; }
 
-    public NotificacaoController(NotificacaoService notificacaoService) {
-        this.notificacaoService = notificacaoService;
-    }
+    @GetMapping
+    public List<Notificacao> listar() { return service.listar(); }
+
+    @GetMapping("/{id}")
+    public Notificacao buscar(@PathVariable Long id) { return service.buscar(id); }
 
     @PostMapping
-    public ResponseEntity<NotificacaoEntity> enviarNotificacao(@Valid @RequestBody NotificacaoEntity notificacao) {
-        NotificacaoEntity novaNotificacao = notificacaoService.enviarNotificacao(notificacao);
-        return ResponseEntity.ok(novaNotificacao);
-    }
+    @ResponseStatus(HttpStatus.CREATED)
+    public Notificacao criar(@Valid @RequestBody Notificacao entidade) { return service.salvar(entidade); }
 
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<NotificacaoEntity>> listarPorUsuario(@PathVariable Long usuarioId) {
-        List<NotificacaoEntity> lista = notificacaoService.listarPorUsuario(usuarioId);
-        return ResponseEntity.ok(lista);
-    }
-
-    @PatchMapping("/{id}/lida")
-    public ResponseEntity<NotificacaoEntity> marcarComoLida(@PathVariable Long id) {
-        NotificacaoEntity atualizada = notificacaoService.marcarComoLida(id);
-        return ResponseEntity.ok(atualizada);
+    @PutMapping("/{id}")
+    public Notificacao atualizar(@PathVariable Long id, @Valid @RequestBody Notificacao entidade) {
+        entidade.setId(id);
+        return service.atualizar(id, entidade);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarNotificacao(@PathVariable Long id) {
-        notificacaoService.deletarNotificacao(id);
-        return ResponseEntity.noContent().build();
-    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) { service.excluir(id); }
 }

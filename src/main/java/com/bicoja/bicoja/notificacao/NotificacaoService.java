@@ -1,37 +1,29 @@
 package com.bicoja.bicoja.notificacao;
 
+import com.bicoja.bicoja.config.RecursoNaoEncontradoException;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class NotificacaoService {
+    private final NotificacaoRepository repository;
 
-    private final NotificacaoRepository notificacaoRepository;
-
-    public NotificacaoService(NotificacaoRepository notificacaoRepository) {
-        this.notificacaoRepository = notificacaoRepository;
+    public NotificacaoService(NotificacaoRepository repository) {
+        this.repository = repository;
     }
 
-    public NotificacaoEntity enviarNotificacao(NotificacaoEntity notificacao) {
-        notificacao.setLida(false);
-        return notificacaoRepository.save(notificacao);
+    public List<Notificacao> listar() { return repository.findAll(); }
+    public Notificacao buscar(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Notificacao não encontrado: " + id));
     }
-
-    public List<NotificacaoEntity> listarPorUsuario(Long usuarioId) {
-        return notificacaoRepository.findByUsuarioId(usuarioId);
+    public Notificacao salvar(Notificacao entidade) { return repository.save(entidade); }
+    public Notificacao atualizar(Long id, Notificacao entidade) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Notificacao não encontrado: " + id);
+        return repository.save(entidade);
     }
-
-    public NotificacaoEntity marcarComoLida(Long id) {
-        NotificacaoEntity notificacao = notificacaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Notificação não encontrada com o ID: " + id));
-
-        notificacao.setLida(true);
-        return notificacaoRepository.save(notificacao);
-    }
-
-    public void deletarNotificacao(Long id) {
-        NotificacaoEntity notificacao = notificacaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Notificação não encontrada com o ID: " + id));
-        notificacaoRepository.delete(notificacao);
+    public void excluir(Long id) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Notificacao não encontrado: " + id);
+        repository.deleteById(id);
     }
 }

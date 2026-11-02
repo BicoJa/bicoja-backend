@@ -1,35 +1,29 @@
 package com.bicoja.bicoja.candidatura;
 
+import com.bicoja.bicoja.config.RecursoNaoEncontradoException;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class CandidaturaService {
+    private final CandidaturaRepository repository;
 
-    private final CandidaturaRepository candidaturaRepository;
-
-    public CandidaturaService(CandidaturaRepository candidaturaRepository) {
-        this.candidaturaRepository = candidaturaRepository;
+    public CandidaturaService(CandidaturaRepository repository) {
+        this.repository = repository;
     }
 
-    public CandidaturaEntity realizarCandidatura(CandidaturaEntity candidatura) {
-        candidatura.setStatus("PENDENTE");
-        return candidaturaRepository.save(candidatura);
+    public List<Candidatura> listar() { return repository.findAll(); }
+    public Candidatura buscar(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Candidatura não encontrado: " + id));
     }
-
-    public List<CandidaturaEntity> listarPorVaga(Long vagaId) {
-        return candidaturaRepository.findByVagaId(vagaId);
+    public Candidatura salvar(Candidatura entidade) { return repository.save(entidade); }
+    public Candidatura atualizar(Long id, Candidatura entidade) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Candidatura não encontrado: " + id);
+        return repository.save(entidade);
     }
-
-    public List<CandidaturaEntity> listarPorProfissional(Long profissionalId) {
-        return candidaturaRepository.findByProfissionalId(profissionalId);
-    }
-
-    public CandidaturaEntity atualizarStatus(Long id, String novoStatus) {
-        CandidaturaEntity candidatura = candidaturaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Candidatura não encontrada com o ID: " + id));
-
-        candidatura.setStatus(novoStatus);
-        return candidaturaRepository.save(candidatura);
+    public void excluir(Long id) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Candidatura não encontrado: " + id);
+        repository.deleteById(id);
     }
 }

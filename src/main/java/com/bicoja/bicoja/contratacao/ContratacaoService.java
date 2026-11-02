@@ -1,35 +1,29 @@
 package com.bicoja.bicoja.contratacao;
 
+import com.bicoja.bicoja.config.RecursoNaoEncontradoException;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class ContratacaoService {
+    private final ContratacaoRepository repository;
 
-    private final ContratacaoRepository contratacaoRepository;
-
-    public ContratacaoService(ContratacaoRepository contratacaoRepository) {
-        this.contratacaoRepository = contratacaoRepository;
+    public ContratacaoService(ContratacaoRepository repository) {
+        this.repository = repository;
     }
 
-    public ContratacaoEntity criarContratacao(ContratacaoEntity contratacao) {
-        contratacao.setStatus("EM_ANDAMENTO");
-        return contratacaoRepository.save(contratacao);
+    public List<Contratacao> listar() { return repository.findAll(); }
+    public Contratacao buscar(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Contratacao não encontrado: " + id));
     }
-
-    public List<ContratacaoEntity> listarPorProfissional(Long profissionalId) {
-        return contratacaoRepository.findByProfissionalId(profissionalId);
+    public Contratacao salvar(Contratacao entidade) { return repository.save(entidade); }
+    public Contratacao atualizar(Long id, Contratacao entidade) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Contratacao não encontrado: " + id);
+        return repository.save(entidade);
     }
-
-    public List<ContratacaoEntity> listarPorContratante(Long contratanteId) {
-        return contratacaoRepository.findByContratanteId(contratanteId);
-    }
-
-    public ContratacaoEntity atualizarStatus(Long id, String novoStatus) {
-        ContratacaoEntity contratacao = contratacaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contratação não encontrada com o ID: " + id));
-
-        contratacao.setStatus(novoStatus);
-        return contratacaoRepository.save(contratacao);
+    public void excluir(Long id) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Contratacao não encontrado: " + id);
+        repository.deleteById(id);
     }
 }

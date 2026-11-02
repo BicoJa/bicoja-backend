@@ -1,42 +1,35 @@
 package com.bicoja.bicoja.profissional;
 
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/profissionais")
+@RequestMapping("/api/profissional")
+@CrossOrigin(origins = "*")
 public class ProfissionalController {
+    private final ProfissionalService service;
 
-    private final ProfissionalService profissionalService;
-
-    public ProfissionalController(ProfissionalService profissionalService) {
-        this.profissionalService = profissionalService;
-    }
-
-    @PostMapping
-    public ResponseEntity<ProfissionalEntity> criar(@Valid @RequestBody ProfissionalEntity profissional) {
-        ProfissionalEntity novoProfissional = profissionalService.salvar(profissional);
-        return ResponseEntity.ok(novoProfissional);
-    }
+    public ProfissionalController(ProfissionalService service) { this.service = service; }
 
     @GetMapping
-    public ResponseEntity<List<ProfissionalEntity>> listarTodos() {
-        List<ProfissionalEntity> profissionais = profissionalService.listarTodos();
-        return ResponseEntity.ok(profissionais);
-    }
+    public List<Profissional> listar() { return service.listar(); }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProfissionalEntity> buscarPorId(@PathVariable Long id) {
-        ProfissionalEntity profissional = profissionalService.buscarPorId(id);
-        return ResponseEntity.ok(profissional);
+    public Profissional buscar(@PathVariable Long id) { return service.buscar(id); }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Profissional criar(@Valid @RequestBody Profissional entidade) { return service.salvar(entidade); }
+
+    @PutMapping("/{id}")
+    public Profissional atualizar(@PathVariable Long id, @Valid @RequestBody Profissional entidade) {
+        entidade.setIdProfissional(id);
+        return service.atualizar(id, entidade);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        profissionalService.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) { service.excluir(id); }
 }

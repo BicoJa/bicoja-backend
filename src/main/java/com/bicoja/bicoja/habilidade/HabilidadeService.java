@@ -1,35 +1,29 @@
 package com.bicoja.bicoja.habilidade;
 
+import com.bicoja.bicoja.config.RecursoNaoEncontradoException;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class HabilidadeService {
+    private final HabilidadeRepository repository;
 
-    private final HabilidadeRepository habilidadeRepository;
-
-    public HabilidadeService(HabilidadeRepository habilidadeRepository) {
-        this.habilidadeRepository = habilidadeRepository;
+    public HabilidadeService(HabilidadeRepository repository) {
+        this.repository = repository;
     }
 
-    public HabilidadeEntity criarHabilidade(HabilidadeEntity habilidade) {
-        if (habilidadeRepository.existsByNome(habilidade.getNome())) {
-            throw new RuntimeException("Esta habilidade já se encontra cadastrada.");
-        }
-        return habilidadeRepository.save(habilidade);
+    public List<Habilidade> listar() { return repository.findAll(); }
+    public Habilidade buscar(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Habilidade não encontrado: " + id));
     }
-
-    public List<HabilidadeEntity> listarTodas() {
-        return habilidadeRepository.findAll();
+    public Habilidade salvar(Habilidade entidade) { return repository.save(entidade); }
+    public Habilidade atualizar(Long id, Habilidade entidade) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Habilidade não encontrado: " + id);
+        return repository.save(entidade);
     }
-
-    public HabilidadeEntity buscarPorId(Long id) {
-        return habilidadeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Habilidade não encontrada com o ID: " + id));
-    }
-
-    public void deletarHabilidade(Long id) {
-        HabilidadeEntity habilidade = buscarPorId(id);
-        habilidadeRepository.delete(habilidade);
+    public void excluir(Long id) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Habilidade não encontrado: " + id);
+        repository.deleteById(id);
     }
 }

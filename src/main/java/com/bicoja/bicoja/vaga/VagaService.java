@@ -1,33 +1,29 @@
 package com.bicoja.bicoja.vaga;
 
+import com.bicoja.bicoja.config.RecursoNaoEncontradoException;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class VagaService {
+    private final VagaRepository repository;
 
-    private final VagaRepository vagaRepository;
-
-    public VagaService(VagaRepository vagaRepository) {
-        this.vagaRepository = vagaRepository;
+    public VagaService(VagaRepository repository) {
+        this.repository = repository;
     }
 
-    public VagaEntity publicarVaga(VagaEntity vaga) {
-        vaga.setStatus("ABERTA");
-        return vagaRepository.save(vaga);
+    public List<Vaga> listar() { return repository.findAll(); }
+    public Vaga buscar(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Vaga não encontrado: " + id));
     }
-
-    public List<VagaEntity> listarVagasAbertas() {
-        return vagaRepository.findByStatus("ABERTA");
+    public Vaga salvar(Vaga entidade) { return repository.save(entidade); }
+    public Vaga atualizar(Long id, Vaga entidade) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Vaga não encontrado: " + id);
+        return repository.save(entidade);
     }
-
-    public VagaEntity buscarPorId(Long id) {
-        return vagaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vaga não encontrada com o ID: " + id));
-    }
-
-    public void deletarVaga(Long id) {
-        VagaEntity vaga = buscarPorId(id);
-        vagaRepository.delete(vaga);
+    public void excluir(Long id) {
+        if (!repository.existsById(id)) throw new RecursoNaoEncontradoException("Vaga não encontrado: " + id);
+        repository.deleteById(id);
     }
 }

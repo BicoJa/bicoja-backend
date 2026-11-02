@@ -1,36 +1,35 @@
 package com.bicoja.bicoja.profissionalhabilidade;
 
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/profissional-habilidades")
+@RequestMapping("/api/profissionalhabilidade")
+@CrossOrigin(origins = "*")
 public class ProfissionalHabilidadeController {
-
     private final ProfissionalHabilidadeService service;
 
-    public ProfissionalHabilidadeController(ProfissionalHabilidadeService service) {
-        this.service = service;
-    }
+    public ProfissionalHabilidadeController(ProfissionalHabilidadeService service) { this.service = service; }
+
+    @GetMapping
+    public List<ProfissionalHabilidade> listar() { return service.listar(); }
+
+    @GetMapping("/{id}")
+    public ProfissionalHabilidade buscar(@PathVariable Long id) { return service.buscar(id); }
 
     @PostMapping
-    public ResponseEntity<ProfissionalHabilidadeEntity> associar(@Valid @RequestBody ProfissionalHabilidadeEntity associacao) {
-        ProfissionalHabilidadeEntity novaAssociacao = service.associar(associacao);
-        return ResponseEntity.ok(novaAssociacao);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProfissionalHabilidade criar(@Valid @RequestBody ProfissionalHabilidade entidade) { return service.salvar(entidade); }
+
+    @PutMapping("/{id}")
+    public ProfissionalHabilidade atualizar(@PathVariable Long id, @Valid @RequestBody ProfissionalHabilidade entidade) {
+        entidade.setIdProfissionalHabilidade(id);
+        return service.atualizar(id, entidade);
     }
 
-    @GetMapping("/profissional/{profissionalId}")
-    public ResponseEntity<List<ProfissionalHabilidadeEntity>> listarPorProfissional(@PathVariable Long profissionalId) {
-        List<ProfissionalHabilidadeEntity> lista = service.listarPorProfissional(profissionalId);
-        return ResponseEntity.ok(lista);
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> desassociar(@RequestParam Long profissionalId, @RequestParam Long habilidadeId) {
-        service.desassociar(profissionalId, habilidadeId);
-        return ResponseEntity.noContent().build();
-    }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) { service.excluir(id); }
 }
