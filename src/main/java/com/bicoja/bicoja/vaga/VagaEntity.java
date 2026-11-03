@@ -2,14 +2,14 @@ package com.bicoja.bicoja.vaga;
 
 import com.bicoja.bicoja.contratante.ContratanteEntity;
 import com.bicoja.bicoja.habilidade.HabilidadeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import com.bicoja.bicoja.endereco.Endereco;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "VAGA")
 public class VagaEntity {
@@ -18,39 +18,42 @@ public class VagaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_contratante", nullable = false)
     private ContratanteEntity contratante;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_habilidade", nullable = false)
     private HabilidadeEntity habilidade;
 
-    public VagaEntity() {
+    @Column(nullable = false, length = 150)
+    private String titulo;
+
+    @Column(nullable = false, length = 1000)
+    private String descricao;
+
+    @Embedded
+    private Endereco endereco;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusVaga status;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataCriacao;
+
+    @PrePersist
+    public void prePersist() {
+        this.dataCriacao = LocalDateTime.now();
+
+        if (this.status == null) {
+            this.status = StatusVaga.ABERTA;
+        }
     }
 
-    public Integer getId() {
-        return id;
-    }
+    @Column
+    private LocalDateTime dataConclusao;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public ContratanteEntity getContratante() {
-        return contratante;
-    }
-
-    public void setContratante(ContratanteEntity contratante) {
-        this.contratante = contratante;
-    }
-
-    public HabilidadeEntity getHabilidade() {
-        return habilidade;
-    }
-
-    public void setHabilidade(HabilidadeEntity habilidade) {
-        this.habilidade = habilidade;
-    }
-
+    @Column
+    private LocalDateTime dataCancelamento;
 }

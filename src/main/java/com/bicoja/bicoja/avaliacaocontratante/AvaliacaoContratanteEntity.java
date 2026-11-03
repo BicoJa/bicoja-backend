@@ -3,16 +3,17 @@ package com.bicoja.bicoja.avaliacaocontratante;
 import com.bicoja.bicoja.contratacao.ContratacaoEntity;
 import com.bicoja.bicoja.contratante.ContratanteEntity;
 import com.bicoja.bicoja.usuario.UsuarioEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "AVALIACAO_CONTRATANTE")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AvaliacaoContratanteEntity {
 
     @Id
@@ -31,39 +32,5 @@ public class AvaliacaoContratanteEntity {
     @JoinColumn(name = "id_contratante", nullable = false)
     private ContratanteEntity contratante;
 
-    public AvaliacaoContratanteEntity() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public ContratacaoEntity getContratacao() {
-        return contratacao;
-    }
-
-    public void setContratacao(ContratacaoEntity contratacao) {
-        this.contratacao = contratacao;
-    }
-
-    public UsuarioEntity getAvaliador() {
-        return avaliador;
-    }
-
-    public void setAvaliador(UsuarioEntity avaliador) {
-        this.avaliador = avaliador;
-    }
-
-    public ContratanteEntity getContratante() {
-        return contratante;
-    }
-
-    public void setContratante(ContratanteEntity contratante) {
-        this.contratante = contratante;
-    }
-
 }
+

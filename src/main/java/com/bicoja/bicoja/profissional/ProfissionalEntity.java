@@ -1,15 +1,18 @@
 package com.bicoja.bicoja.profissional;
 
 import com.bicoja.bicoja.usuario.UsuarioEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Entity
-@Table(name = "PROFISSIONAL")
+@Table(name = "profissional")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProfissionalEntity {
 
     @Id
@@ -19,24 +22,4 @@ public class ProfissionalEntity {
     @MapsId
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
-
-    public ProfissionalEntity() {
-    }
-
-    public Integer getId_usuario() {
-        return id_usuario;
-    }
-
-    public void setId_usuario(Integer id_usuario) {
-        this.id_usuario = id_usuario;
-    }
-
-    public UsuarioEntity getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(UsuarioEntity usuario) {
-        this.usuario = usuario;
-    }
-
 }

@@ -1,25 +1,29 @@
 package com.bicoja.bicoja.usuario;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "USUARIO")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UsuarioEntity {
 
     @Id
     private Integer id_usuario;
 
-    public UsuarioEntity() {
-    }
+    @Column(nullable = false, length = 150)
+    private String nome;
 
-    public Integer getId_usuario() {
-        return id_usuario;
-    }
+    @Column(nullable = false, length = 20)
+    private String telefone;
 
-    public void setId_usuario(Integer id_usuario) {
-        this.id_usuario = id_usuario;
-    }
+    @Column(nullable = false, unique = true, length = 11)
+    private String cpf;
 
+    @Column(nullable = false, length = 255)
+    private String senha;
 }

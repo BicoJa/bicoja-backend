@@ -2,16 +2,17 @@ package com.bicoja.bicoja.candidatura;
 
 import com.bicoja.bicoja.profissional.ProfissionalEntity;
 import com.bicoja.bicoja.vaga.VagaEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "CANDIDATURA")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CandidaturaEntity {
 
     @Id
@@ -25,32 +26,5 @@ public class CandidaturaEntity {
     @ManyToOne
     @JoinColumn(name = "id_profissional", nullable = false)
     private ProfissionalEntity profissional;
-
-    public CandidaturaEntity() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public VagaEntity getVaga() {
-        return vaga;
-    }
-
-    public void setVaga(VagaEntity vaga) {
-        this.vaga = vaga;
-    }
-
-    public ProfissionalEntity getProfissional() {
-        return profissional;
-    }
-
-    public void setProfissional(ProfissionalEntity profissional) {
-        this.profissional = profissional;
-    }
 
 }
