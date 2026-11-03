@@ -13,7 +13,8 @@ import lombok.NoArgsConstructor;
 public class UsuarioEntity {
 
     @Id
-    private Integer id_usuario;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, length = 150)
     private String nome;

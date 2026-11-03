@@ -16,10 +16,9 @@ public class FotoTrabalhoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_profissional", nullable = false)
-    private ProfissionalEntity profissional;
+    @Column(nullable = false)
+    private Long profissionalId;
 
 }

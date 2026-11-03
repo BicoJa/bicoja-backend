@@ -15,8 +15,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ProfissionalHabilidadeEntity {
 
-    @EmbeddedId
-    private ProfissionalHabilidadeId id;
+    @Id
+    private Long profissionalId;
 
     @ManyToOne
     @MapsId("id_profissional")
