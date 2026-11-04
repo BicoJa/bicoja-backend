@@ -1,4 +1,4 @@
-package com.bicoja.bicoja.avaliacaocontratante;
+/*package com.bicoja.bicoja.avaliacaocontratante;
 
 import com.bicoja.bicoja.contratacao.ContratacaoEntity;
 import com.bicoja.bicoja.contratante.ContratanteEntity;
@@ -32,5 +32,5 @@ public class AvaliacaoContratanteEntity {
     @JoinColumn(name = "id_contratante", nullable = false)
     private ContratanteEntity contratante;
 
-}
+}*/
 

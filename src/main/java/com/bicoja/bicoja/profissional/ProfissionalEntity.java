@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "profissional")
 @Getter
@@ -22,4 +24,7 @@ public class ProfissionalEntity {
     @MapsId
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
+
+    @Column(precision = 2, scale = 1)
+    private BigDecimal avaliacao;
 }
